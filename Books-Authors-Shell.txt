@@ -1,0 +1,83 @@
+(venv) C:\Users\Perdorues\Desktop\books_authors\books_authors_prj>python manage.py shell
+Python 3.9.2 (tags/v3.9.2:1a79785, Feb 19 2021, 13:44:55) [MSC v.1928 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from books_authors_app.models import *
+>>> c_sharp = Book.objects.create(title="C Sharp",desc="It rocks.")
+>>> java = Book.objects.create(title="Java",desc="It rocks.")
+>>> python = Book.objects.create(title="Python",desc="It rocks.")
+>>> php = Book.objects.create(title="PHP",desc="It rocks.")
+>>> ruby = Book.objects.create(title="Ruby",desc="It rocks.")
+>>> jane_austen = Author.objects.create(first_name="Jane",last_name="Austen")
+>>> emily_dickinson = Author.objects.create(first_name="Emily",last_name="Dickinson")
+>>> fyodor_dostoevsky = Author.objects.create(first_name="Fyodor",last_name="Dostoevsky")
+>>> william_shakespeare = Author.objects.create(first_name="William",last_name="Shakespeare")
+>>> lau_tzu = Author.objects.create(first_name="Lau",last_name="Tzu")
+>>> exit()
+
+(venv) C:\Users\Perdorues\Desktop\books_authors\books_authors_prj>python manage.py makemigrations
+You are trying to add a non-nullable field 'notes' to author without a default; we can't do that (the database needs something to populate existing rows).
+Please select a fix:
+ 1) Provide a one-off default now (will be set on all existing rows with a null value for this column)
+ 2) Quit, and let me add a default in models.py
+Select an option: 1
+Please enter the default value now, as valid Python
+The datetime and django.utils.timezone modules are available, so you can do e.g. timezone.now
+Type 'exit' to exit this prompt
+>>>
+Please enter some code, or 'exit' (with no quotes) to exit.
+>>> "notes"
+Migrations for 'books_authors_app':
+  books_authors_app\migrations\0003_author_notes.py
+    - Add field notes to author
+
+(venv) C:\Users\Perdorues\Desktop\books_authors\books_authors_prj>python manage.py migrate
+Operations to perform:
+  Apply all migrations: admin, auth, books_authors_app, contenttypes, sessions
+Running migrations:
+  Applying books_authors_app.0003_author_notes... OK
+
+(venv) C:\Users\Perdorues\Desktop\books_authors\books_authors_prj>python manage.py shell
+Python 3.9.2 (tags/v3.9.2:1a79785, Feb 19 2021, 13:44:55) [MSC v.1928 64 bit (AMD64)] on win32
+Type "help", "copyright", "credits" or "license" for more information.
+(InteractiveConsole)
+>>> from books_authors_app.models import *
+>>> updated_book = Book.objects.get(id=1)
+>>> updated_book.title = "C#"
+>>> updated_book.save()
+>>> updated_author = Author.objects.get(id=4)
+>>> updated_author.first_name = "Bill"
+>>> updated_author.save()
+>>> jane_austen_books = Author.objects.get(id=1)
+>>> jane_austen_books.books.add(Book.objects.get(id=1))
+>>> jane_austen_books.books.add(Book.objects.get(id=2))
+>>> emily_dickinson_books = Author.objects.get(id=2)
+>>> emily_dickinson_books.books.add(Book.objects.get(id=1))
+>>> emily_dickinson_books.books.add(Book.objects.get(id=2))
+>>> emily_dickinson_books.books.add(Book.objects.get(id=3))
+>>> fyodor_dostoevsky_books = Author.objects.get(id=3)
+>>> fyodor_dostoevsky_books.books.add(Book.objects.get(id=1))
+>>> fyodor_dostoevsky_books.books.add(Book.objects.get(id=2))
+>>> fyodor_dostoevsky_books.books.add(Book.objects.get(id=3))
+>>> fyodor_dostoevsky_books.books.add(Book.objects.get(id=4))
+>>> bill_shakespeare_books = Author.objects.get(id=4)
+>>> bill_shakespeare_books.books.add(Book.objects.get(id=1))
+>>> bill_shakespeare_books.books.add(Book.objects.get(id=2))
+>>> bill_shakespeare_books.books.add(Book.objects.get(id=3))
+>>> bill_shakespeare_books.books.add(Book.objects.get(id=4))
+>>> bill_shakespeare_books.books.add(Book.objects.get(id=5))
+>>> third_book = Book.objects.get(id=3)
+>>> third_book.authors.all()
+<QuerySet [<Author: Author object (2)>, <Author: Author object (3)>, <Author: Author object (4)>]>
+>>> third_book.authors.remove(emily_dickinson_books)
+>>> emily_dickinson_books.books.all()
+<QuerySet [<Book: Book object (1)>, <Book: Book object (2)>]>
+>>> second_book = Book.objects.get(id=2)
+>>> second_book.authors.add(Author.objects.get(id=5))
+>>> second_book.authors.all()
+<QuerySet [<Author: Author object (1)>, <Author: Author object (2)>, <Author: Author object (3)>, <Author: Author object (4)>, <Author: Author object (5)>]>
+>>> fyodor_dostoevsky_books.books.all()
+<QuerySet [<Book: Book object (1)>, <Book: Book object (2)>, <Book: Book object (3)>, <Book: Book object (4)>]>
+>>> fifth_book = Book.objects.get(id=5)
+>>> fifth_book.authors.all()
+<QuerySet [<Author: Author object (4)>]>
